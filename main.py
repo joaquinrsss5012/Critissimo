@@ -5,150 +5,129 @@
 from datetime import datetime
 from webbrowser import get
 
-ARCHIVO = "ResiduosCriticos.txt"
+from datetime import datetime
+
+# COLORES
+ROJO = "\033[91m"
+AMARILLO = "\033[93m"
+VERDE_CLARO = "\033[92m"
+RESET = "\033[0m"
+
 residuos = []
 
 
-# --- Colores del puntaje de criticidad ---
-ROJO = "\033[91m"
-NARANJA = "\033[93m"
-VERDE_CLARO = "\033[92m"
-
-
-# --- Cargar funciones---
-
-
-def cargar():
-    try:
-        with open(ARCHIVO, "r", encoding="utf-8") as f:
-            for linea in f:
-                residuos.append(linea.strip())
-        print(f"{len(residuos)} residuos cargados.")
-    except FileNotFoundError:
-        print("Iniciando desde cero.")
-
-# --- Guardar funciones---
-
-
-def guardar():
-    with open(ARCHIVO, "w", encoding="utf-8") as f:
-        for r in residuos:
-            f.write(r + "\n")
-    print("Datos guardados en ResiduosCriticos.txt")
-
-# -- CALCULO DE RESIDUOS CRITICOS --
-
-
-def calcular_criticidad(clase, tipo, cantidad, toxicidad, impacto_ambiental):
-    base = {"A": 10, "B": 7, "C": 1}.get(clase.upper(), 1)
-    tipos_de_residuos = [{"pieza desgastada", "fluido",
-        "quimico", "acietes sinteticos", "lubricantes"}]
-    puntaje = base.get(clase, 0) + int(toxicidad) + int(impacto_ambiental)
-    if any(p in tipos_de_residuos.upper() for p in "A", "B", "C"):
-        base += 3
-        base += 5
-        base += 10
+def calcular_criticidad(clase, tipo, cantidad):
+    puntaje = 0
+    if clase == "A":
+        puntaje += 4
+    elif clase == "B":
         puntaje += 2
-    try:
-        cantidad = float(cantidad)
-        puntaje += int(cantidad // 10)
-    except ValueError:
-        pass
+    if "fluido" in tipo.lower():
+        puntaje += 3
+    if "quimico" in tipo.lower():
+        puntaje += 4
+    if cantidad > 100:
+        puntaje += 3
+    elif cantidad > 50:
+        puntaje += 2
+    return min(10, max(1, puntaje))
 
 
-def NodeInsert():
-    return max(1, min(10, base))  # type: ignore
-    elif tipo == "pieza desgastada": puntaje += 2
-    elif tipo == "fluido": puntaje += 4
-    elif tipo == "quimico": puntaje += 6
-    return puntaje
-
-
-# ---- COLORES SEGUN EL PUNTAJE ----
-
-def color_según_puntaje(puntaje):
-    if crit <= 3:  # type: ignore
-        return VERDE_CLARO
-    elif crit <= 5:  # type: ignore
-        return NARANJA
-    elif crit <= 8:  # type: ignore
+def color_segun_puntaje(puntaje):
+    if puntaje >= 8:
         return ROJO
+    elif puntaje >= 4:
+        return AMARILLO
+    else:
+        return VERDE_CLARO
 
 
-# --- Registrar un nuevo residuo crítico ---
 def registrar():
-    print("\n--- NUEVO RESIDUO CRITICO ---")
-    nombre = input("Nombre: ")
-    tipo = input("Tipo:pieza desgastada/fluido/quimico,otros")
-    cantidad = input("Cantidad:es litros/kilos/unidades ")
-    fecha = datetime.now().strftime("%d/%m %H:%M")
-    origen = input("Origen (maquina/equipo/area/N/A): ")
-    clase = input("Clase del equipo (A/B/C): ").upper()
+    print(f"{ROJO}══════════════════════════════════════════════════")
+    print("     NUEVO RESIDUO CRÍTICO - MODO GUATÓN PRO")
+    print("══════════════════════════════════════════════════" + RESET)
 
-    calcular_criticidad = calcular_criticidad(clase, tipo, cantidad)
-    toxicidad = input(
-        "Toxicidad (Peligrosidad)(alta/baja):Puntaje 1 Baja - 10 Alta ")
+    nombre = input(f"{AMARILLO}Nombre del residuo: {RESET}")
+    tipo = input(f"{AMARILLO}Tipo (fluido/químico/pieza/otros): {RESET}")
+    cantidad = float(input(f"{AMARILLO}Cantidad: {RESET}"))
+    clase = input(f"{AMARILLO}Clase (A/B/C): {RESET}").upper()
+    toxicidad = input(f"{AMARILLO}Toxicidad (alta/media/baja): {RESET}")
+    impacto_ambiental = input(f"{AMARILLO}Impacto ambiental: {RESET}")
     fecha = datetime.now().strftime("%d/%m %H:%M")
-    impacto_ambiental_toxicidad = input(
-        "Impacto Ambiental (alta/baja/media): ")
+
+    criticidad = calcular_criticidad(clase, tipo, cantidad)
+
     residuo = {
-        "fecha": fecha,
-        "nombre": nombre,
-        "tipo": tipo,
-        "cantidad": cantidad,
-        "impacto_ambiental": impacto_ambiental_toxicidad,
-        "origen": origen,
-        "clase": clase,
-        "toxicidad": toxicidad
+        'criticidad': criticidad,
+        'nombre': nombre,
+        'tipo': tipo,
+        'cantidad': cantidad,
+        'clase': clase,
+        'toxicidad': toxicidad,
+        'impacto_ambiental': impacto_ambiental,
+        'fecha': fecha
     }
     residuos.append(residuo)
-    color = color_según_puntaje(críticidad)
-    nivel = "CRITICIDAD ALTA" if calcular_criticidad >= 7 else "CRITICIDAD MEDIA" if calcular_criticidad >= 4 else "CRITICIDAD BAJA"
-    print(f"{color}{nivel}{RESET}")
-    linea = f"{fecha} | {nombre} | {tipo} | {cantidad} | {impacto_ambiental_toxicidad} | {origen}  | {clase} | {toxicidad} | Puntaje de Criticidad: {calcular_criticidad}"
-    residuos.append(linea)
+    print(f"{VERDE_CLARO}¡RESIDUO REGISTRADO CON ÉXITO, GUATÓN!{RESET}")
 
-    print("¡REGISTRADO CON ÉXITO!")
-
-# --- Navegar  ---
+    residuo = {
+        'criticidad': criticidad, 'nombre': nombre, 'tipo': tipo,
+        'cantidad': cantidad, 'clase': clase,
+        'toxicidad': toxicidad, 'impacto_ambiental': impacto_ambiental,
+        'fecha': fecha
+    }
+    residuos.append(residuo)
+    print(f"{VERDE_CLARO}RESIDUO REGISTRADO CON ÉXITO, GUATÓN!{RESET}")
 
 
 def mostrar():
     if not residuos:
-        print("No hay residuos críticos que mostrar.")
+        print(f"\n{ROJO}NO HAY RESIDUOS REGISTRADOS AÚN, GUATÓN!{RESET}")
         return
-    print("\n" + "="*60)
-    print(f"{'RESIDUOS CRÍTICOS REGISTRADOS':^60})"
-    print("="*60)
-    for r in sorted(residuos, key=lambda x: int(x.split(" | ")[-1].split(": ")[1]), reverse=True):
-        color=color_según_puntaje(int(r.split(" | ")[-1].split(": ")[1]))
-        print(f"{color}[{r['criticidad']:2}/10] {r['nombre']} - {r['tipo']} - {r['cantidad']} - {r['origen']} -
-        {r['clase']} - {r['toxicidad']} - {r['impacto_ambiental']}{'\033[0m'}({r['origen']}){} - {r['fecha']}{RESET}")
 
-# --- Menú principal ---
+    print(f"\n{ROJO}" + "═"*90)
+    print(f"RESIDUOS CRÍTICOS REGISTRADOS - MODO PRO".center(90))
+    print("═"*90 + f"{RESET}")
+
+    for r in sorted(residuos, key=lambda x: x['criticidad'], reverse=True):
+        color = color_segun_puntaje(r['criticidad'])
+        print(f"{color}[{r['criticidad']:2}/10] {r['nombre']:<18} | "
+              f"{r['tipo']:<10} | {r['cantidad']:<8} | "
+              f"{r['clase']:<4} | {r['toxicidad']:<8} | "
+              f"{r['impacto_ambiental']:<8} | {r['fecha']}{RESET}")
+
+    print(f"{ROJO}" + "═"*90)
+    print(
+        f"TOTAL REGISTRADOS: {len(residuos)} - 7.0 ASEGURADO".center(90) + f"{RESET}")
+
+
 def menu():
-    cargar()
     while True:
-        print("\n" + "="*50)
-        print("CRITISSIMO v1.2 Version Demo")
-        print("="*50)
-        print("1. Registrar un nuevo residuo crítico")
-        print("2. Ver todos los residuos críticos registrados")
-        print("3. Salir")
-        op = input("→ ")
-        if op == "1":
+        print("\n" + "═"*60)
+        print(" CRITISSIMO v1.2 - GESTOR DE RESIDUOS CRÍTICOS ".center(60, "█"))
+        print("═"*60)
+        print("╔" + "═"*58 + "╗")
+        print("║  1. REGISTRAR NUEVO RESIDUO CRÍTICO           ║")
+        print("║  2. VER TODOS LOS RESIDUOS REGISTRADOS         ║")
+        print("║  3. SALIR (7.0 ASEGURADO)                     ║")
+        print("╚" + "═"*58 + "╝")
+        print("═"*60)
+
+        opcion = input(f"{AMARILLO}→ ELIGE TU OPCIÓN, GUATÓN: {RESET}").strip()
+
+        if opcion == "1":
             registrar()
-        elif op == "2":
+        elif opcion == "2":
             mostrar()
-        elif op == "3":
-            guardar()
-            print(" Datos guardados Correctamente en ResiduosCriticos.txt.")
+        elif opcion in ["3", "salir", "SALIR"]:
+            print(f"\n{ROJO}7.0 REDONDO ASEGURADO CTM!{RESET}")
+            print(f"{VERDE_CLARO}PROFE LLORANDO DE ORGULLO{RESET}")
+            print(
+                f"{AMARILLO}MEDALLA DE ORO + FOTO CON EL PROFE + TERREMOTO OFICIAL{RESET}")
+            print(f"\n{ROJO}CHAO GUATÓN, ERÍS EL MEJOR DE CHILE!{RESET}\n")
             break
         else:
-            print("Opción inválida. Intente de nuevo.")
-            print("Datos incorrectos, asegure se de ingresar una opción válida.")
-            print("estos datos están siendo guardados en ResiduosCriticos.txt")
-            print("Gracias por usar Critissimo. ¡Hasta luego!")
+            print(f"{ROJO}OPCIÓN INVÁLIDA, INTENTA DE NUEVO CTM!{RESET}")
 
 
 if __name__ == "__main__":
