@@ -1,10 +1,9 @@
 # Critissimo v1.2 - Version Demo residuos criticos
-# Fecha: 2/11/2025
+# Fecha: 1/11/2025
 # Objetivo: Menu la cantidad de residuos criticos generados en el mantenimiento
 # main.py.modelo Beta (COLORES + PUNTAJE)
 from datetime import datetime
 from webbrowser import get
-
 from datetime import datetime
 
 # COLORES
@@ -44,7 +43,7 @@ def color_segun_puntaje(puntaje):
 
 def registrar():
     print(f"{ROJO}══════════════════════════════════════════════════")
-    print("     NUEVO RESIDUO CRÍTICO - MODO GUATÓN PRO")
+    print("     NUEVO RESIDUO CRÍTICO         ")
     print("══════════════════════════════════════════════════" + RESET)
 
     nombre = input(f"{AMARILLO}Nombre del residuo: {RESET}")
@@ -68,7 +67,7 @@ def registrar():
         'fecha': fecha
     }
     residuos.append(residuo)
-    print(f"{VERDE_CLARO}¡RESIDUO REGISTRADO CON ÉXITO, GUATÓN!{RESET}")
+    print(f"{VERDE_CLARO}¡RESIDUO REGISTRADO CON ÉXITO!{RESET}")
 
     residuo = {
         'criticidad': criticidad, 'nombre': nombre, 'tipo': tipo,
@@ -77,16 +76,16 @@ def registrar():
         'fecha': fecha
     }
     residuos.append(residuo)
-    print(f"{VERDE_CLARO}RESIDUO REGISTRADO CON ÉXITO, GUATÓN!{RESET}")
+    print(f"{VERDE_CLARO}RESIDUO REGISTRADO CON ÉXITO!{RESET}")
 
 
 def mostrar():
     if not residuos:
-        print(f"\n{ROJO}NO HAY RESIDUOS REGISTRADOS AÚN, GUATÓN!{RESET}")
+        print(f"\n{ROJO}NO HAY RESIDUOS REGISTRADOS AÚN!{RESET}")
         return
 
     print(f"\n{ROJO}" + "═"*90)
-    print(f"RESIDUOS CRÍTICOS REGISTRADOS - MODO PRO".center(90))
+    print(f"RESIDUOS CRÍTICOS REGISTRADOS ".center(90))
     print("═"*90 + f"{RESET}")
 
     for r in sorted(residuos, key=lambda x: x['criticidad'], reverse=True):
@@ -107,27 +106,27 @@ def menu():
         print(" CRITISSIMO v1.2 - GESTOR DE RESIDUOS CRÍTICOS ".center(60, "█"))
         print("═"*60)
         print("╔" + "═"*58 + "╗")
-        print("║  1. REGISTRAR NUEVO RESIDUO CRÍTICO           ║")
+        print("║  1. REGISTRAR NUEVO RESIDUO CRÍTICO            ║")
         print("║  2. VER TODOS LOS RESIDUOS REGISTRADOS         ║")
-        print("║  3. SALIR (7.0 ASEGURADO)                     ║")
+        print("║  3. SALIR                                      ║")
         print("╚" + "═"*58 + "╝")
         print("═"*60)
 
-        opcion = input(f"{AMARILLO}→ ELIGE TU OPCIÓN, GUATÓN: {RESET}").strip()
+        opcion = input(f"{AMARILLO}→ ELIGE TU OPCIÓN: {RESET}").strip()
 
         if opcion == "1":
             registrar()
         elif opcion == "2":
             mostrar()
-        elif opcion in ["3", "salir", "SALIR"]:
-            print(f"\n{ROJO}7.0 REDONDO ASEGURADO CTM!{RESET}")
-            print(f"{VERDE_CLARO}PROFE LLORANDO DE ORGULLO{RESET}")
+        elif opcion in ["3", "salir"]:
+            print(f"\n{ROJO}SALIENDO{RESET}")
+            print(f"{VERDE_CLARO}GRACIAS POR USAR CRITISSIMO{RESET}")
             print(
-                f"{AMARILLO}MEDALLA DE ORO + FOTO CON EL PROFE + TERREMOTO OFICIAL{RESET}")
-            print(f"\n{ROJO}CHAO GUATÓN, ERÍS EL MEJOR DE CHILE!{RESET}\n")
+                f"{AMARILLO}{RESET}")
+            print(f"\n{ROJO}HASTA LUEGO!{RESET}\n")
             break
         else:
-            print(f"{ROJO}OPCIÓN INVÁLIDA, INTENTA DE NUEVO CTM!{RESET}")
+            print(f"{ROJO}OPCIÓN INVÁLIDA, INTENTA DE NUEVO!{RESET}")
 
 
 if __name__ == "__main__":
